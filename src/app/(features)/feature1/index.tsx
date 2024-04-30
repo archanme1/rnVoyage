@@ -12,7 +12,20 @@ const FeatureOne = () => {
           fontSize: 75,
           fontFamily: 'AmaticBold',
         }
-      }>FeatureOne</Text>
+      }>Setup RN app</Text>
+      <Text style={
+        {
+          fontSize: 55,
+          fontFamily: 'AmaticBold',
+        }
+      }>With:</Text>
+      <Text style={
+        {
+          color: 'teal',
+          fontSize: 35,
+          fontFamily: 'AmaticBold',
+        }
+      }>Expo Router, TypeScript, Fonts, SplashScreen & Others...</Text>
     </View>
   )
 }
