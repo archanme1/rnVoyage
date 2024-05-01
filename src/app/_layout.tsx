@@ -7,6 +7,7 @@ import {
 } from '@expo-google-fonts/amatic-sc';
 
 import * as SplashScreen from 'expo-splash-screen';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,8 +30,10 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack screenOptions={{}}>
-      <Stack.Screen name="index" options={{ title: 'RN Voyage' }} />
-    </Stack>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Stack screenOptions={{}}>
+        <Stack.Screen name="index" options={{ title: 'RN Voyage' }} />
+      </Stack>
+    </GestureHandlerRootView>
   );
 }

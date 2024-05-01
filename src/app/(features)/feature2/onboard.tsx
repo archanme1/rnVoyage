@@ -3,7 +3,8 @@ import React from 'react'
 import { Link, Stack, router } from 'expo-router'
 import { FontAwesome5 } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { Directions, Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Animated, { Easing, LightSpeedInRight, LightSpeedOutLeft, LightSpeedOutRight, SlideInRight, SlideOutLeft } from 'react-native-reanimated';
 
 const onboardingSteps = [
     {
@@ -13,12 +14,12 @@ const onboardingSteps = [
     },
     {
       icon: 'people-arrows',
-      title: 'Learn and grow together',
+      title: 'Learn and grow',
       description: 'Learn by building may projects with React Native and Expo',
     },
     {
       icon: 'book-reader',
-      title: 'Education for Archan Bhatta',
+      title: 'Education',
       description:
         'This is Self Education for Archan Bhatta to learn and grow with React Native and Expo.',
     },
@@ -38,6 +39,14 @@ const OnBoard = () => {
         }
     }
 
+    const onBack = () => {
+        if(stepIndex > 0){
+            setStepIndex(stepIndex - 1)
+        } else {
+            endBoarding();
+        }
+    }
+
     const onSkip = () => {
         endBoarding();
     }
@@ -47,21 +56,26 @@ const OnBoard = () => {
         router.back();
     }
 
+    const rightSwipe = Gesture.Fling().direction(Directions.LEFT).onEnd(onContinue);
+    const leftSwipe = Gesture.Fling().direction(Directions.RIGHT).onEnd(onBack);
+
+    const swipes = Gesture.Simultaneous(rightSwipe, leftSwipe);
+
   return (
     <SafeAreaView style={styles.page}>
         <Stack.Screen options={{headerShown: false}}  />
         <StatusBar barStyle="light-content" />
 
-        <View style={styles.pageContent}>
+        <GestureDetector gesture={swipes}>
+            <Animated.View style={styles.pageContent} entering={LightSpeedInRight} exiting={LightSpeedOutRight} key={stepIndex}>
+                <FontAwesome5 name={initialData.icon} size={70} color= "#CEF202" />
+                <View style={styles.textFooter}>
+                    <Text style={styles.title}>{initialData.title}</Text>
 
-            <FontAwesome5 name={initialData.icon} size={70} color= "#CEF202" />
-
-            <View style={styles.textFooter}>
-                <Text style={styles.title}>{initialData.title}</Text>
-
-                <Text style={styles.description}>{initialData.description}</Text>
-            </View>
-        </View>
+                    <Animated.Text   style={styles.description} entering={SlideInRight.delay(300).easing(Easing.ease)} exiting={SlideOutLeft}> {initialData.description}</Animated.Text>
+                </View>
+            </Animated.View>
+        </GestureDetector>
         <View style={styles.buttonRow}>
                {(stepIndex !== (onboardingSteps.length - 1)) &&
                 <Text onPress={onSkip} style={styles.buttonText}>Skip</Text>
@@ -102,6 +116,7 @@ const styles = StyleSheet.create({
     },
     pageContent: {
         padding: 20,
+        gap: 20,
     },
     image: {
     },
