@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
         backgroundColor: "black",
     },
     text: {
-        color: "#CEF202",
+        color: "#7e9e7b",
         fontFamily: "Amatic",
         fontSize: 20,
         marginBottom: 20,

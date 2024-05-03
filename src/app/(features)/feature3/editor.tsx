@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#32572f',
     },
     tabText: {
-        color: '#CEF202',
+        color: '#7e9e7b',
         fontFamily: 'Inter',
     },
     input: {

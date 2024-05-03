@@ -5,30 +5,30 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import MarkdownDisplay from '@/components/feature3/MarkdownDisplay';
 
 const markdownContent = `
-# 🎉 Splashing Screen!
+# 🎉 Map!
 
-Welcome to this Splashing Screen Animation with Lottie!
+Welcome to this Map in RN like Airbnb!
     `;
 
-const FeatureFour = () => {
+const FeatureFive = () => {
   return (
     <SafeAreaView edges={["bottom"]} style={styles.page} >
-        <Stack.Screen options={{title: "4-SplashScreen"}}  />
+        <Stack.Screen options={{title: "5-Map"}}  />
 
         <MarkdownDisplay>
             {markdownContent}
         </MarkdownDisplay>
 
-        <Link href="/feature4/animation" asChild>
+        <Link href="/feature5/map" asChild>
             <Pressable style={styles.button}>
-            <Text style={styles.buttonText}>Go to Splashing Screen Animation</Text>
+            <Text style={styles.buttonText}>Direct to Map Page</Text>
             </Pressable>
         </Link>
     </SafeAreaView>
   )
 }
 
-export default FeatureFour;
+export default FeatureFive;
 
 const styles = StyleSheet.create({
     page: {

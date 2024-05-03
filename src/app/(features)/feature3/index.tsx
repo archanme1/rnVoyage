@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
         width: "75%",
     },
     buttonText: {
-        color: "#CEF202",
+        color: "#7e9e7b",
         padding: 20,
         fontFamily: "Inter",
     },
