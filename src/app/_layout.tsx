@@ -9,6 +9,7 @@ import {
 import * as SplashScreen from 'expo-splash-screen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import SplashScreenAnimate from '@/components/feature4/SplashScreen';
+import Animated, { FadeIn, ZoomIn } from 'react-native-reanimated';
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -44,9 +45,11 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
+      <Animated.View style={{ flex: 1 }} entering={FadeIn}>
       <Stack screenOptions={{}}>
         <Stack.Screen name="index" options={{ title: 'RN Voyage' }} />
       </Stack>
+      </Animated.View>
     </GestureHandlerRootView>
   );
 }
