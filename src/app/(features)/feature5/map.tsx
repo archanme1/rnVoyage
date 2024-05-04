@@ -1,51 +1,64 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
-import { Stack } from 'expo-router'
-import appartments from "@assets/data/feature5/dummy.json"
-import CustomMarkerComponent from '@/components/feature5/CustomMarkerComponent'
-import ApartmentListItem from '@/components/feature5/ApartmentListItem'
+import { StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { Stack } from "expo-router";
+import appartments from "@assets/data/feature5/dummy.json";
+import CustomMarkerComponent from "@/components/feature5/CustomMarkerComponent";
+import ApartmentListItem from "@/components/feature5/ApartmentListItem";
 
 const MapScreen = () => {
-
+  const [selectedApartment, setSelectedApartment] = useState<{
+    id: number;
+    latitude: number;
+    longitude: number;
+    price: number;
+    title: string;
+    numberOfStars: number;
+    rating: number;
+    image: string;
+  } | null>(null);
   const [mapRegion, setMapRegion] = useState({
     latitude: 37.78825,
     longitude: -122.4324,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
-  })
+  });
 
   return (
     <View style={styles.container}>
-        <Stack.Screen options={{headerShown: false}}/>
+      <Stack.Screen options={{ headerShown: false }} />
 
-      <MapView style={styles.map}
-        initialRegion={mapRegion}
-        //provider={PROVIDER_GOOGLE}  
+      <MapView
+        style={styles.map}
+        region={mapRegion}
+        //provider={PROVIDER_GOOGLE}
       >
-        {
-          appartments.map((apartment) => (
-              <CustomMarkerComponent
-              key={apartment.id}
-              apartment={apartment}
-              />
-            )
-          )
-        }
+        {appartments.map((apartment) => (
+          <CustomMarkerComponent
+            key={apartment.id}
+            apartment={apartment}
+            onPress={() => setSelectedApartment(apartment)}
+          />
+        ))}
       </MapView>
-      <ApartmentListItem />
+      {selectedApartment && (
+        <ApartmentListItem
+          apartment={selectedApartment}
+          onPress={() => setSelectedApartment(null)}
+        />
+      )}
     </View>
-  )
-}
+  );
+};
 
-export default MapScreen
+export default MapScreen;
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-    },
-    map: {
-      width: '100%',
-      height: '100%',
-    }
-  });
+  container: {
+    flex: 1,
+  },
+  map: {
+    width: "100%",
+    height: "100%",
+  },
+});
