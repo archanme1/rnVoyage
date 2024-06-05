@@ -1,22 +1,35 @@
-import { useState } from 'react';
-import { View, StyleSheet, Button, FlatList, Text, Pressable } from 'react-native';
-import { Audio } from 'expo-av';
-import { Stack } from 'expo-router';
-import { Recording } from 'expo-av/build/Audio';
-import Animated, { interpolate, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
-import MemoListItem from '@/components/feature7/MemoListItem';
+import { useState } from "react";
+import {
+  View,
+  StyleSheet,
+  Button,
+  FlatList,
+  Text,
+  Pressable,
+} from "react-native";
+import { Audio } from "expo-av";
+import { Stack } from "expo-router";
+import { Recording } from "expo-av/build/Audio";
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import MemoListItem from "@/components/feature7/MemoListItem";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Memos() {
   const [recording, setRecording] = useState<Recording>();
   const [permissionResponse, requestPermission] = Audio.usePermissions();
-  const [memos, setMemos] = useState<String[]>([]);
+  const [memos, setMemos] = useState<string[]>([]);
   const metering = useSharedValue(-100);
 
   async function startRecording() {
-    if(!permissionResponse) return
+    if (!permissionResponse) return;
     try {
-      if (permissionResponse.status !== 'granted') {
-        console.log('Requesting permission..');
+      if (permissionResponse.status !== "granted") {
+        console.log("Requesting permission..");
         await requestPermission();
       }
       await Audio.setAudioModeAsync({
@@ -24,48 +37,49 @@ export default function Memos() {
         playsInSilentModeIOS: true,
       });
 
-      console.log('Starting recording..');
-      const { recording } = await Audio.Recording.createAsync( Audio.RecordingOptionsPresets.HIGH_QUALITY
+      console.log("Starting recording..");
+      const { recording } = await Audio.Recording.createAsync(
+        Audio.RecordingOptionsPresets.HIGH_QUALITY
       );
       setRecording(recording);
-      console.log('Recording started');
+      console.log("Recording started");
     } catch (err) {
-      console.error('Failed to start recording', err);
+      console.error("Failed to start recording", err);
     }
   }
 
   async function stopRecording() {
-    if(!recording) return 
-    console.log('Stopping recording..');
+    if (!recording) return;
+    console.log("Stopping recording..");
     setRecording(undefined);
     await recording.stopAndUnloadAsync();
-    await Audio.setAudioModeAsync(
-      {
-        allowsRecordingIOS: false,
-      }
-    );
+    await Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+    });
     const uri = recording.getURI();
     // console.log('Recording stopped and stored at', uri);
-    if(uri) {
-        setMemos((prev)=> [...prev, uri])
+    if (uri) {
+      setMemos((prev) => [...prev, uri]);
     }
   }
 
-const animatedRedCircle = useAnimatedStyle(() => {
+  const animatedRedCircle = useAnimatedStyle(() => {
     return {
-        width: withTiming(recording ? '60%' : '100%'),
-        borderRadius: withTiming(recording ? 5 : 35),
-    }
-})
-
+      width: withTiming(recording ? "60%" : "100%"),
+      borderRadius: withTiming(recording ? 5 : 35),
+    };
+  });
 
   return (
-    <View style={styles.container}>
-        <Stack.Screen options={{headerShown: false}} />
-        
-        <FlatList data={memos} renderItem={({item})=> <MemoListItem url={item} />} />
-       
-        <View style={styles.footer}>
+    <SafeAreaView style={styles.container}>
+      <Stack.Screen options={{ headerShown: false }} />
+
+      <FlatList
+        data={memos}
+        renderItem={({ item }) => <MemoListItem uri={item} />}
+      />
+
+      <View style={styles.footer}>
         <View>
           <Pressable
             style={styles.recordButton}
@@ -75,22 +89,22 @@ const animatedRedCircle = useAnimatedStyle(() => {
           </Pressable>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#ecf0f1',
+    justifyContent: "center",
+    backgroundColor: "#ecf0f1",
     padding: 10,
   },
   footer: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     height: 150,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   recordButton: {
     width: 70,
@@ -98,15 +112,15 @@ const styles = StyleSheet.create({
     borderRadius: 35,
 
     borderWidth: 3,
-    borderColor: '#32572f',
+    borderColor: "#32572f",
     padding: 3,
 
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "white",
   },
   redCircle: {
-    backgroundColor: '#7e9e7b',
+    backgroundColor: "#7e9e7b",
     aspectRatio: 1,
   },
 });
