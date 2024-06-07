@@ -11,6 +11,7 @@ import { Audio } from "expo-av";
 import { Stack } from "expo-router";
 import { Recording } from "expo-av/build/Audio";
 import Animated, {
+  Extrapolation,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
@@ -18,6 +19,7 @@ import Animated, {
 } from "react-native-reanimated";
 import MemoListItem from "@/components/feature7/MemoListItem";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { primary_color, secondary_color } from "@/app/lib";
 
 export default function Memos() {
   const [recording, setRecording] = useState<Recording>();
@@ -39,10 +41,18 @@ export default function Memos() {
 
       console.log("Starting recording..");
       const { recording } = await Audio.Recording.createAsync(
-        Audio.RecordingOptionsPresets.HIGH_QUALITY
+        Audio.RecordingOptionsPresets.HIGH_QUALITY,
+        undefined,
+        1000 / 60
       );
       setRecording(recording);
       console.log("Recording started");
+
+      recording.setOnRecordingStatusUpdate((status) => {
+        if (status.isRecording) {
+          metering.value = status.metering || -100;
+        }
+      });
     } catch (err) {
       console.error("Failed to start recording", err);
     }
@@ -63,10 +73,26 @@ export default function Memos() {
     }
   }
 
-  const animatedRedCircle = useAnimatedStyle(() => {
+  const animatedGreenCircle = useAnimatedStyle(() => {
     return {
       width: withTiming(recording ? "60%" : "100%"),
       borderRadius: withTiming(recording ? 5 : 35),
+    };
+  });
+
+  const animatedWavesRecord = useAnimatedStyle(() => {
+    const size = withTiming(
+      interpolate(metering.value, [-160, -50, 0], [0, 0, -50], {
+        // extrapolateRight: Extrapolation.CLAMP,
+      }),
+      { duration: 100 }
+    );
+
+    return {
+      top: size,
+      bottom: size,
+      left: size,
+      right: size,
     };
   });
 
@@ -85,8 +111,9 @@ export default function Memos() {
             style={styles.recordButton}
             onPress={recording ? stopRecording : startRecording}
           >
-            <Animated.View style={[styles.redCircle, animatedRedCircle]} />
+            <Animated.View style={[styles.GreenCircle, animatedGreenCircle]} />
           </Pressable>
+          <Animated.View style={[styles.recordWaves, animatedWavesRecord]} />
         </View>
       </View>
     </SafeAreaView>
@@ -110,17 +137,29 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 35,
-
     borderWidth: 3,
-    borderColor: "#32572f",
+    borderColor: primary_color,
     padding: 3,
-
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "white",
+    zIndex: 1,
   },
-  redCircle: {
-    backgroundColor: "#7e9e7b",
+  recordWaves: {
+    backgroundColor: secondary_color,
+    opacity: 0.3,
+    position: "absolute",
+    borderRadius: 50,
+  },
+  waveformCss: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  GreenCircle: {
+    backgroundColor: secondary_color,
     aspectRatio: 1,
   },
 });
