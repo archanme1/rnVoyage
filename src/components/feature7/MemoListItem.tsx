@@ -1,14 +1,25 @@
 import { StyleSheet, Text, View } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { formatMillis, primary_color } from "@/app/lib";
+import {
+  background_color,
+  formatMillis,
+  primary_color,
+  secondary_color,
+} from "@/app/lib";
 import { AVPlaybackStatus, Audio } from "expo-av";
 import Animated, {
+  interpolate,
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
 
-const MemoListItem = ({ uri }: { uri: string }) => {
+export type Memo = {
+  uri: string;
+  metering: number[];
+};
+
+const MemoListItem = ({ memo }: { memo: Memo }) => {
   const [sound, setSound] = useState<Audio.Sound | undefined>();
   const [status, setStatus] = useState<AVPlaybackStatus>();
 
@@ -24,8 +35,8 @@ const MemoListItem = ({ uri }: { uri: string }) => {
   async function playSound() {
     console.log("Loading Sound");
     const { sound } = await Audio.Sound.createAsync(
-      { uri },
-      { progressUpdateIntervalMillis: 100 },
+      { uri: memo.uri },
+      { progressUpdateIntervalMillis: 1000 / 60 },
       onPlaybackStatusUpdate
     );
     setSound(sound);
@@ -55,23 +66,72 @@ const MemoListItem = ({ uri }: { uri: string }) => {
 
   const isPlaying = status?.isLoaded ? status?.isPlaying : false;
 
-  const animatedIndicaorStyle = useAnimatedStyle(() => {
-    return {
-      // something
-      left: withTiming(`${progress * 100}%`, {
-        duration: 200,
-      }),
-    };
-  });
+  // const animatedIndicaorStyle = useAnimatedStyle(() => {
+  //   return {
+  //     // something
+  //     left: withTiming(`${progress * 100}%`, {
+  //       duration: 200,
+  //     }),
+  //   };
+  // });
+
+  console.log("memo metering length", memo.metering.length);
+
+  let numLines = 50;
+  let lines = [];
+
+  for (let i = 0; i < numLines; i++) {
+    const meteringIndex = Math.floor((i * memo.metering.length) / numLines);
+    console.log("meteringIndex", meteringIndex);
+
+    const nextMeteringIndex = Math.ceil(
+      ((i + 1) * memo.metering.length) / numLines
+    );
+
+    console.log("nextMeteringIndex", nextMeteringIndex);
+    const values = memo.metering.slice(meteringIndex, nextMeteringIndex);
+    console.log("values", values);
+
+    const average = values.reduce((sum, a) => sum + a, 0) / values.length;
+    console.log("average", average);
+
+    // lines.push(memo.metering[meteringIndex]);
+    lines.push(average);
+  }
+
+  console.log("lines", lines);
 
   return (
     <View style={styles.container}>
-      <Text onPress={playSound}>{isPlaying ? "Pause" : "Play"}</Text>
+      <Text onPress={playSound}>{isPlaying ? "Stop " : "Play"}</Text>
       <View style={styles.playbackContainer}>
-        <View style={styles.playbackBackground} />
-        <Animated.View
+        {/* <View style={styles.playbackBackground} /> */}
+        <View style={styles.wave}>
+          {lines.map((meter, index) => {
+            // console.log("meter", meter);
+
+            return (
+              <View
+                style={[
+                  styles.waveLine,
+                  {
+                    height: interpolate(meter, [-50, 0], [5, 50], {
+                      extrapolateRight: "clamp",
+                    }),
+                    backgroundColor:
+                      progress > index / memo.metering.length
+                        ? primary_color
+                        : secondary_color,
+                  },
+                ]}
+                key={index}
+              />
+            );
+          })}
+        </View>
+        {/* <Animated.View
           style={[styles.playbackIndicator, animatedIndicaorStyle]}
-        />
+        /> */}
         <Text
           style={{
             position: "absolute",
@@ -121,7 +181,7 @@ const styles = StyleSheet.create({
   },
   playbackBackground: {
     height: 3,
-    backgroundColor: "gainsboro",
+    backgroundColor: background_color,
     borderRadius: 5,
   },
   playbackIndicator: {
@@ -139,8 +199,7 @@ const styles = StyleSheet.create({
   },
   waveLine: {
     flex: 1,
-    height: 30,
-    backgroundColor: "gainsboro",
+    opacity: 0.3,
     borderRadius: 20,
   },
 });

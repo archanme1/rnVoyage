@@ -17,19 +17,21 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import MemoListItem from "@/components/feature7/MemoListItem";
+import MemoListItem, { Memo } from "@/components/feature7/MemoListItem";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { primary_color, secondary_color } from "@/app/lib";
 
 export default function Memos() {
   const [recording, setRecording] = useState<Recording>();
   const [permissionResponse, requestPermission] = Audio.usePermissions();
-  const [memos, setMemos] = useState<string[]>([]);
+  const [memos, setMemos] = useState<Memo[]>([]);
   const metering = useSharedValue(-100);
+  const [audioMetering, setAudioMetering] = useState<number[]>([]);
 
   async function startRecording() {
     if (!permissionResponse) return;
     try {
+      setAudioMetering([]);
       if (permissionResponse.status !== "granted") {
         console.log("Requesting permission..");
         await requestPermission();
@@ -43,7 +45,7 @@ export default function Memos() {
       const { recording } = await Audio.Recording.createAsync(
         Audio.RecordingOptionsPresets.HIGH_QUALITY,
         undefined,
-        1000 / 60
+        250
       );
       setRecording(recording);
       console.log("Recording started");
@@ -51,6 +53,7 @@ export default function Memos() {
       recording.setOnRecordingStatusUpdate((status) => {
         if (status.isRecording) {
           metering.value = status.metering || -100;
+          setAudioMetering((prev) => [...prev, status.metering || -100]);
         }
       });
     } catch (err) {
@@ -69,7 +72,7 @@ export default function Memos() {
     const uri = recording.getURI();
     // console.log('Recording stopped and stored at', uri);
     if (uri) {
-      setMemos((prev) => [...prev, uri]);
+      setMemos((prev) => [...prev, { uri, metering: audioMetering }]);
     }
   }
 
@@ -102,7 +105,7 @@ export default function Memos() {
 
       <FlatList
         data={memos}
-        renderItem={({ item }) => <MemoListItem uri={item} />}
+        renderItem={({ item }) => <MemoListItem memo={item} />}
       />
 
       <View style={styles.footer}>
