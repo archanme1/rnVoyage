@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { View, Text, StyleSheet, TextInput, Button } from "react-native";
-import { signUp } from "aws-amplify/auth";
+// import { signUp } from "aws-amplify/auth";
 import { Link, router } from "expo-router";
 
 const SignUpScreen = () => {
@@ -9,19 +9,19 @@ const SignUpScreen = () => {
   const [error, setError] = useState("");
 
   const onSignUpPressed = async () => {
-    setError("");
-    try {
-      await signUp({
-        username: email,
-        password,
-        options: {
-          userAttributes: {},
-          autoSignIn: true,
-        },
-      });
-    } catch (e) {
-      setError("Sign up failed");
-    }
+    // setError("");
+    // try {
+    //   await signUp({
+    //     username: email,
+    //     password,
+    //     options: {
+    //       userAttributes: {},
+    //       autoSignIn: true,
+    //     },
+    //   });
+    // } catch (e) {
+    //   setError("Sign up failed");
+    // }
   };
 
   return (

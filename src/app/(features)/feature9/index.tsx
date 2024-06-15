@@ -19,12 +19,14 @@ const Feature9 = () => {
     <SafeAreaView edges={["bottom"]} style={styles.page}>
       <Stack.Screen options={{ title: "Feature 8: awsAmplifyAUTH" }} />
 
-      <Link href="/feature8/weather" asChild>
+      <Link href="/feature9/protected" asChild>
         <Pressable style={styles.button}>
-          <Text style={styles.buttonText}>
-            Proceed ONline when you are authenticated
-          </Text>
-         
+          <Text style={styles.buttonText}>Proceed when authenticated</Text>
+        </Pressable>
+      </Link>
+      <Link href="/feature9/auth/signin" asChild>
+        <Pressable style={styles.button}>
+          <Text style={styles.buttonText}>Sign In</Text>
         </Pressable>
       </Link>
     </SafeAreaView>
@@ -38,6 +40,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    gap: 20,
   },
   button: {
     backgroundColor: "#32572f",

@@ -1,7 +1,7 @@
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import React from "react";
 import { Link, router } from "expo-router";
-import { signIn } from "aws-amplify/auth";
+// import { signIn } from "aws-amplify/auth";
 
 const SignInScreen = () => {
   const [email, setEmail] = React.useState("");
@@ -9,24 +9,24 @@ const SignInScreen = () => {
   const [error, setError] = React.useState("");
 
   const onSignInPressed = async () => {
-    try {
-      setError("");
-      const { isSignedIn, nextStep } = await signIn({
-        username: email,
-        password,
-      });
-      if (isSignedIn) {
-        router.push("/feature9/protected");
-      } else {
-        setError("Sign in failed");
-      }
-    } catch (error) {
-      console.log("error signing in", error);
-      setError("Sign in failed");
-    } finally {
-      setEmail("");
-      setPassword("");
-    }
+    // try {
+    //   setError("");
+    //   const { isSignedIn, nextStep } = await signIn({
+    //     username: email,
+    //     password,
+    //   });
+    //   if (isSignedIn) {
+    //     router.push("/feature9/protected");
+    //   } else {
+    //     setError("Sign in failed");
+    //   }
+    // } catch (error) {
+    //   console.log("error signing in", error);
+    //   setError("Sign in failed");
+    // } finally {
+    //   setEmail("");
+    //   setPassword("");
+    // }
   };
 
   return (
