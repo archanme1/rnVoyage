@@ -13,6 +13,7 @@ import {
   Theme,
   ThemeProvider,
 } from "@aws-amplify/ui-react-native";
+import BiometricProvider from "@/components/feature10/BiometricProvidder";
 // App.js
 
 // need IOS or Android developmetn build to work
@@ -58,14 +59,16 @@ export default function RootLayout() {
   }
 
   return (
-    // <Authenticator.Provider>
-    //   <ThemeProvider theme={theme}>
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Stack screenOptions={{}}>
-        <Stack.Screen name="index" options={{ title: "RN Voyage" }} />
-      </Stack>
-    </GestureHandlerRootView>
-    // </ThemeProvider>
-    // </Authenticator.Provider>
+    <BiometricProvider>
+      {/* // <Authenticator.Provider>
+    //   <ThemeProvider theme={theme}> */}
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <Stack screenOptions={{}}>
+          <Stack.Screen name="index" options={{ title: "RN Voyage" }} />
+        </Stack>
+      </GestureHandlerRootView>
+      {/* // </ThemeProvider>
+    // </Authenticator.Provider> */}
+    </BiometricProvider>
   );
 }
