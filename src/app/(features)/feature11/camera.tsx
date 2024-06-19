@@ -9,16 +9,16 @@ import {
   Text,
   View,
 } from "react-native";
-import {
-  Camera,
-  PhotoFile,
-  TakePhotoOptions,
-  VideoFile,
-  useCameraDevice,
-  useCameraPermission,
-  useCodeScanner,
-  useMicrophonePermission,
-} from "react-native-vision-camera";
+// import {
+//   Camera,
+//   PhotoFile,
+//   TakePhotoOptions,
+//   VideoFile,
+//   useCameraDevice,
+//   useCameraPermission,
+//   useCodeScanner,
+//   useMicrophonePermission,
+// } from "react-native-vision-camera";
 import { Video } from "expo-av";
 
 const CameraScreen = () => {

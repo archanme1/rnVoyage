@@ -3,24 +3,21 @@ import React from "react";
 import { primary_color, secondary_color } from "@/app/lib";
 import { Link, Stack } from "expo-router";
 
-const FeatureEleven = () => {
+const FeatureTwelve = () => {
   return (
     <SafeAreaView style={styles.page}>
-      <Stack.Screen options={{ title: "10-Biometrics" }} />
+      <Stack.Screen options={{ title: "12- Tiktik" }} />
 
-      <Link href="/feature11/camera" asChild>
+      <Link href="/feature12/tiktik" asChild>
         <Pressable style={styles.button}>
-          <Text style={styles.buttonText}>Open Camera</Text>
+          <Text style={styles.buttonText}>Tiktok feed</Text>
         </Pressable>
       </Link>
-      <Text style={styles.buttonText}>
-        Here we need build native ios or android! Does not work in EXPO GO
-      </Text>
     </SafeAreaView>
   );
 };
 
-export default FeatureEleven;
+export default FeatureTwelve;
 
 const styles = StyleSheet.create({
   page: {
